@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineKumaribo</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>🎬 CineKumaribo</h1>
+    </header>
+
+    <div class="container">
+        <!-- CATÁLOGO DE SERIES -->
+        <div id="series-catalog"></div>
+
+        <!-- LISTA DE EPISODIOS -->
+        <div id="episodes-view">
+            <div class="back-to-series" onclick="showSeriesCatalog()">← Volver a Series</div>
+            <div class="series-header">
+                <h2 id="current-series-title"></h2>
+            </div>
+            <div id="episodes-grid"></div>
+        </div>
+
+        <!-- REPRODUCTOR -->
+        <div id="player-view">
+            <div class="player-wrapper">
+                <button class="close-player" onclick="closePlayer()">✕</button>
+                <video id="video-player" playsinline></video>
+                <div class="controls">
+                    <div class="episode-title" id="playing-episode"></div>
+                    
+                    <div class="quality-controls">
+                        <select id="quality">
+                            <option value="-1">Auto</option>
+                        </select>
+                    </div>
+
+                    <div class="playback-controls">
+                        <button id="rewind-5">⏪ -5s</button>
+                        <button id="play-pause">▶️ Play</button>
+                        <button id="forward-5">⏩ +5s</button>
+                    </div>
+
+                    <div class="navigation-controls">
+                        <button id="prev-episode">◀ Anterior</button>
+                        <button id="next-episode">Siguiente ▶</button>
+                    </div>
+
+                    <button class="back-button" onclick="showEpisodesList()">← Volver a Episodios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
