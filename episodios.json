@@ -1,0 +1,58 @@
+{ 
+  "trace_id": "363c0010f3b54676", 
+  "code": 0, 
+  "msg": "ok", 
+  "data": {
+    "id": 10410127, 
+    "name": "Este Asesino es Desalmado e Invencible", 
+    "desc": "Li Xuan, el mejor asesino del Valle Maléfico, vence a una mujer en un ataque y, al encontrar a Lu Shibing perseguida, libera su aura de muerte tras ser provocado por ninjas.", 
+    "image_url": "https://oss.sixthshort.com/freeflicks/production/drama/10410127/es/cover.jpg?t=1773115004", 
+    "genres": [
+      {
+        "id": 8, 
+        "name": "Moderno" 
+     },  
+      {
+        "id": 14, 
+        "name": "Masculino" 
+     }  
+    ],  
+    "episodes": [
+      {
+        "id": 19937, 
+        "episode_num": 1, 
+        "video_url": "https://oss.sixthshort.com/freeflicks/production/drama/10410127/es/videos/1/master.m3u8", 
+        "like_count": 46047 
+     },
+     { 
+  "trace_id": "70f7f4eefc6b4afc", 
+  "code": 0, 
+  "msg": "ok", 
+  "data": {
+    "id": 10410072, 
+    "name": "¡Deja de Rogar! Ella Ya Tiene una Nueva Familia", 
+    "desc": "Lu Yushen escribe 99 cartas de amor para casarse con Qiao Qingsui, pero tras la boda, la hiere al obsesionarse con otra. Ella quema las cartas y lo deja. Cuando él se arrepiente, ya ha perdido su amor para siempre.", 
+    "image_url": "https://oss.sixthshort.com/freeflicks/production/drama/10410072/es/cover.jpg?t=1773112682", 
+    "genres": [
+      {
+        "id": 11, 
+        "name": "Romance contemporáneo" 
+     },  
+      {
+        "id": 15, 
+        "name": "Masculina" 
+     }  
+    ],  
+    "episodes": [
+      {
+        "id": 14306, 
+        "episode_num": 1, 
+        "video_url": "https://oss.sixthshort.com/freeflicks/production/drama/10410072/es/videos/1/master.m3u8", 
+        "like_count": 213702 
+     },  
+      {
+        "id": 14305, 
+        "episode_num": 2, 
+        "video_url": "https://oss.sixthshort.com/freeflicks/production/drama/10410072/es/videos/2/master.m3u8", 
+        "like_count": 48937 
+     }
