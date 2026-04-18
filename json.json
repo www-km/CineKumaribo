@@ -1,0 +1,26 @@
+{
+  "name": "Mi Lista Personal",
+  "author": "Usuario123",
+  "image": "https://mi-servidor.com",
+  "groups": [
+    {
+      "name": "Noticias",
+      "stations": [
+        {
+          "name": "Canal Informativo 1",
+          "image": "https://img.com",
+          "url": "https://raw.githubusercontent.com/www-km/CineKumaribo/refs/heads/main/01.m3u"
+        }
+      ]
+    },
+    {
+      "name": "Cine",
+      "stations": [
+        {
+          "name": "Pelicula Acción",
+          "url": "https://raw.githubusercontent.com/www-km/CineKumaribo/refs/heads/main/00.m3u"
+        }
+      ]
+    }
+  ]
+}
