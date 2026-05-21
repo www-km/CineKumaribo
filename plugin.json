@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Editor De texto",
+    "version": "1.0.0",
+    "description": "Breve descripción de qué hace el plugin.",
+    "author": "CineKumaribo",
+    "downloadUrl": "https://sdown.newsophon.com/api/cd/resource/download/entire/kbPvE9dmPyZGBV25rwNR.fmp"
+  },
+  {
+    "name": "player",
+    "version": "2.1.0",
+    "description": "Funcionalidad adicional.",
+    "author": "cinekumaribo",
+    "downloadUrl": "https://sdown.newsophon.com/api/cd/resource/download/entire/aXEYxk7mG1xEqQNRDBey.fmp"
+  }
+]
