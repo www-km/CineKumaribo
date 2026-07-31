@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tira · Lector de Manga</title>
+<style>
+  :root{
+    --ink:#0b0b0c;
+    --panel:#141416;
+    --line:#242427;
+    --paper:#e8e4da;
+    --accent:#e3402b;
+    --accent-dim:#7a2318;
+    --muted:#7a7a80;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Courier New",Courier,monospace;
+    min-height:100vh;
+  }
+
+  /* ---- Barra de control ---- */
+  #panel{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:14px 16px;
+  }
+  #panel .row{
+    display:flex;
+    gap:8px;
+    max-width:760px;
+    margin:0 auto 8px auto;
+    flex-wrap:wrap;
+  }
+  #panel .row:last-of-type{margin-bottom:0;}
+  .brand{
+    max-width:760px;
+    margin:0 auto 12px auto;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .mark{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:var(--accent);
+  }
+  .brand .sub{
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:3px;
+    text-transform:uppercase;
+  }
+  label{
+    display:block;
+    font-size:9px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .field{flex:1 1 auto; min-width:180px;}
+  .field.small{flex:0 0 90px; min-width:70px;}
+  input[type=text], input[type=number]{
+    width:100%;
+    background:#0e0e10;
+    border:1px solid var(--line);
+    color:var(--paper);
+    padding:9px 10px;
+    font-family:inherit;
+    font-size:13px;
+    border-radius:2px;
+  }
+  input:focus{outline:1px solid var(--accent); border-color:var(--accent);}
+  button{
+    background:var(--accent);
+    color:#0b0b0c;
+    border:none;
+    padding:0 20px;
+    font-family:inherit;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    cursor:pointer;
+    border-radius:2px;
+    align-self:flex-end;
+    height:38px;
+  }
+  button:hover{background:#ff5b41;}
+  button:active{background:var(--accent-dim);}
+  button:disabled{background:var(--muted); cursor:not-allowed;}
+
+  #status{
+    max-width:760px;
+    margin:8px auto 0 auto;
+    font-size:11px;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+  }
+  #status .num-ok{color:#7fbf6a;}
+  #status .num-fail{color:var(--accent);}
+
+  /* ---- Tira ---- */
+  #strip{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:0 0 80px 0;
+  }
+  .page{
+    width:100%;
+    max-width:760px;
+    display:block;
+    position:relative;
+    background:#0e0e10;
+  }
+  .page img{
+    width:100%;
+    display:block;
+  }
+  .page .tag{
+    position:absolute;
+    top:6px;
+    left:6px;
+    background:rgba(0,0,0,.65);
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:1px;
+    padding:2px 6px;
+    border-radius:2px;
+    pointer-events:none;
+  }
+  .page.error{
+    min-height:80px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-top:1px dashed var(--accent-dim);
+    border-bottom:1px dashed var(--accent-dim);
+    color:var(--accent);
+    font-size:11px;
+    letter-spacing:1px;
+    padding:14px;
+    text-align:center;
+  }
+  .page.loading{
+    min-height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:2px;
+  }
+
+  #empty{
+    max-width:760px;
+    margin:60px auto;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    letter-spacing:1px;
+    padding:0 20px;
+    line-height:1.7;
+  }
+  #empty b{color:var(--paper);}
+
+  #topbtn{
+    position:fixed;
+    bottom:18px;
+    right:18px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--paper);
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    z-index:60;
+  }
+</style>
+</head>
+<body>
+
+<div id="panel">
+  <div class="brand">
+    <span class="mark">TIRA</span>
+    <span class="sub">lector secuencial</span>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="url">URL primera imagen</label>
+      <input type="text" id="url" placeholder="https://sitio.com/manga/cap-1/1.jpg">
+    </div>
+  </div>
+  <div class="row">
+    <div class="field small">
+      <label for="start">Desde</label>
+      <input type="number" id="start" value="1" min="0">
+    </div>
+    <div class="field small">
+      <label for="end">Hasta</label>
+      <input type="number" id="end" value="12" min="1">
+    </div>
+    <button id="loadBtn">Cargar</button>
+  </div>
+
+  <div id="status" style="display:none;">
+    <span id="statusLeft">—</span>
+    <span id="statusRight"></span>
+  </div>
+</div>
+
+<div id="strip"></div>
+
+<div id="empty">
+  Pega la URL de la primera página y el rango de páginas.<br><br>
+  Ej: <b>https://img.sitio.com/manga/cap-1/1.jpg</b> con rango <b>1–24</b><br>
+  detecta el <b>1.jpg</b> final y genera 2.jpg, 3.jpg... hasta 24.jpg,<br>
+  mostrando todo en una sola tira vertical.
+</div>
+
+<button id="topbtn" title="Subir">↑</button>
+
+<script>
+(function(){
+  const urlInput = document.getElementById('url');
+  const startInput = document.getElementById('start');
+  const endInput = document.getElementById('end');
+  const loadBtn = document.getElementById('loadBtn');
+  const strip = document.getElementById('strip');
+  const empty = document.getElementById('empty');
+  const statusBox = document.getElementById('status');
+  const statusLeft = document.getElementById('statusLeft');
+  const statusRight = document.getElementById('statusRight');
+  const topBtn = document.getElementById('topbtn');
+
+  let okCount = 0, failCount = 0, total = 0;
+
+  function buildUrls(sample, start, end){
+    // Busca el último segmento numérico antes de la extensión: .../123.jpg
+    const m = sample.match(/^(.*?)(\d+)(\.[a-zA-Z0-9]+)(\?.*)?$/);
+    if(!m) return null;
+    const prefix = m[1];
+    const ext = m[3];
+    const query = m[4] || '';
+    const digits = m[2].length;
+    const padZero = m[2].length > 1 && m[2][0] === '0';
+
+    const urls = [];
+    for(let i = start; i <= end; i++){
+      let numStr = String(i);
+      if(padZero) numStr = numStr.padStart(digits, '0');
+      urls.push(prefix + numStr + ext + query);
+    }
+    return urls;
+  }
+
+  function updateStatus(){
+    statusLeft.textContent = `Cargando: ${okCount + failCount}/${total}`;
+    statusRight.innerHTML = `<span class="num-ok">${okCount} ok</span> · <span class="num-fail">${failCount} fallidas</span>`;
+  }
+
+  function loadStrip(){
+    const sample = urlInput.value.trim();
+    let start = parseInt(startInput.value, 10);
+    let end = parseInt(endInput.value, 10);
+
+    if(!sample){ alert('Pega la URL de la primera imagen.'); return; }
+    if(isNaN(start)) start = 1;
+    if(isNaN(end) || end < start){ alert('El rango final debe ser mayor o igual al inicial.'); return; }
+
+    const urls = buildUrls(sample, start, end);
+    if(!urls){
+      alert('No encontré un número en la URL antes de la extensión (ej: /1.jpg). Revisa el formato.');
+      return;
+    }
+
+    empty.style.display = 'none';
+    strip.innerHTML = '';
+    okCount = 0; failCount = 0; total = urls.length;
+    statusBox.style.display = 'flex';
+    updateStatus();
+    loadBtn.disabled = true;
+    loadBtn.textContent = '···';
+
+    urls.forEach((u, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'page loading';
+      wrap.textContent = `pág. ${start + idx}`;
+      strip.appendChild(wrap);
+
+      const img = new Image();
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.alt = `página ${start + idx}`;
+
+      img.onload = () => {
+        wrap.className = 'page';
+        wrap.textContent = '';
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.textContent = start + idx;
+        wrap.appendChild(tag);
+        wrap.appendChild(img);
+        okCount++;
+        updateStatus();
+        if(okCount + failCount === total){ loadBtn.disabled = false; loadBtn.textContent = 'Cargar'; }
+      };
+
+      img.onerror = () => {
+        wrap.className = 'page error';
+        wrap.textContent = `⚠ pág. ${start + idx} no disponible`;
+        failCount++;
+        updateStatus();
+        if(okCount + failCount === total){ loadBtn.disabled = false; loadBtn.textContent = 'Cargar'; }
+      };
+
+      img.src = u;
+    });
+  }
+
+  loadBtn.addEventListener('click', loadStrip);
+  urlInput.addEventListener('keydown', e => { if(e.key === 'Enter') loadStrip(); });
+
+  window.addEventListener('scroll', () => {
+    topBtn.style.display = window.scrollY > 600 ? 'flex' : 'none';
+  });
+  topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+})();
+</script>
+
+</body>
+</html>
